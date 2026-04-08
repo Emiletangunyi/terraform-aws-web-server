@@ -1,126 +1,81 @@
-terraform {
-    required_providers {
-      aws = {
-        source  = "hashicorp/aws"
-        version = "~> 5.0"
-      }
-    }
-}
+# AWS Terraform Project 1 - Web Server
 
-provider "aws" {
-    region = "us-east-1"
+## 📌 Overview
+This project provisions a complete AWS infrastructure using Terraform and deploys a publicly accessible web server.
 
-}
+It demonstrates Infrastructure as Code (IaC) by automating the creation of networking, security, and compute resources.
 
-resource "aws_vpc" "main_vpc" {
-    cidr_block = "10.0.0.0/16"
-    
-    tags     = {
-        Name = "project1-vpc"
-    }
-}
+---
 
-resource "aws_subnet" "public_subnet" {
-    vpc_id                   = aws_vpc.main_vpc.id
-    cidr_block               = "10.0.1.0/24"
-    map_public_ip_on_launch  = true
+## 🏗️ Architecture
+The following components were created:
 
-    tags = {
-        Name = "project1-public-subnet"
-    }
+- VPC (Virtual Private Cloud)
+- Public Subnet
+- Internet Gateway
+- Route Table + Association
+- Security Group (ports 22, 80, 443)
+- EC2 Instance (t2.micro)
+- Apache Web Server (installed via user_data)
 
+---
 
+## ⚙️ Technologies Used
+- Terraform
+- AWS (EC2, VPC, Networking)
+- Linux (Amazon Linux)
+- Git & GitHub
 
-}
+---
 
-resource "aws_internet_gateway" "nameigw" {
-    vpc_id = aws_vpc.main_vpc.id
+## 🚀 Features
+- Fully automated infrastructure deployment
+- Public web server accessible via browser
+- Secure access via Security Groups
+- Infrastructure lifecycle management using Terraform
 
-    tags = {
-        Name ="project1-igw"
-    }
-  
-}
+---
 
-resource "aws_route_table" "public_rt" {
-    vpc_id = aws_vpc.main_vpc.id
+## 🧪 Result
+After deployment, the EC2 instance serves a web page:
 
-    route {
-        cidr_block = "0.0.0.0/0"
-         gateway_id = aws_internet_gateway.nameigw.id
-}
-    tags = {
-        Name = "project1-public-rt"
-    }
-  
-}
+Hello from Terraform
 
-resource "aws_route_table_association" "public_assoc" {
-    subnet_id      = aws_subnet.public_subnet.id
-    route_table_id = aws_route_table.public_rt.id
-}
+Accessible via the instance's public IP.
 
-resource "aws_security_group" "allow_web" {
-  name        = "allow_web"
-  description = "Allow web and SSH traffic"
-  vpc_id      = aws_vpc.main_vpc.id
+---
 
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+## ▶️ How to Run
 
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+### 1. Initialize Terraform
+terraform init
 
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+### 2. Preview Infrastructure
+terraform plan
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+### 3. Deploy Infrastructure
+terraform apply
 
-  tags = {
-    Name = "project1-allow-web"
-  }
-}
+### 4. Destroy Infrastructure
+terraform destroy
 
-resource "aws_instance" "web_server" {
-  ami                         = "ami-0c02fb55956c7d316"
-  instance_type               = "t2.micro"
-  subnet_id                   = aws_subnet.public_subnet.id
-  vpc_security_group_ids      = [aws_security_group.allow_web.id]
-  associate_public_ip_address = true
+---
 
+## 🧠 Key Learnings
+- AWS networking fundamentals (VPC, subnets, routing)
+- Infrastructure as Code using Terraform
+- Automating server configuration with user_data
+- Managing cloud resources efficiently and securely
 
-    user_data = <<-EOF
-#!/bin/bash
-yum update -y
-yum install -y httpd
-systemctl start httpd
-systemctl enable httpd
-echo "Hello from Terraform" > /var/www/html/index.html
-EOF 
-    tags ={
-        Name = "project1-web-sever"
-    }
-}
+---
 
-  
-  
+## 🔮 Future Improvements
+- Add Application Load Balancer (ALB)
+- Implement Auto Scaling Group
+- Use S3 backend for Terraform state
+- Modularize Terraform code
+
+---
+
+## 👤 Author
+Emile Tangunyi

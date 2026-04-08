@@ -1,13 +1,13 @@
 # AWS Terraform Project 1 - Web Server
 
-## 📌 Overview
+##  Overview
 This project provisions a complete AWS infrastructure using Terraform and deploys a publicly accessible web server.
 
 It demonstrates Infrastructure as Code (IaC) principles by automating the creation of networking, security, and compute resources.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 The following components were created:
 
 - VPC (Virtual Private Cloud)
@@ -20,7 +20,7 @@ The following components were created:
 
 ---
 
-## ⚙️ Technologies Used
+## Technologies Used
 - Terraform
 - AWS (EC2, VPC, Networking)
 - Linux (Amazon Linux)
@@ -28,7 +28,7 @@ The following components were created:
 
 ---
 
-## 🚀 Features
+##  Features
 - Fully automated infrastructure deployment
 - Public web server accessible via browser
 - Secure access via Security Groups
@@ -36,5 +36,5 @@ The following components were created:
 
 ---
 
-## 🧪 Result
+##  Result
 After deployment, the EC2 instance serves a web page:
